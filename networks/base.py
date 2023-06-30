@@ -29,7 +29,8 @@ class BaseNetwork(object):
             showTest(test_images, test_labels, predictions, title, fig_text)
 
     def labelEncode(self, labels):
-        return tf.one_hot(labels, depth=settings.TRAIN_TEST_WAY, axis=1)
+        # return tf.one_hot(labels, depth=settings.TRAIN_TEST_WAY, axis=1)
+        return tf.one_hot(labels, depth=settings.TRAIN_TEST_WAY, axis=-1)
 
     @property
     def trainable_variables(self):

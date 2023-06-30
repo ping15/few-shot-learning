@@ -6,3 +6,7 @@ tmp
 data
 miniDatas
 networks/gan
+test.py
+test2.py
+models/__pycache__
+networks/__pycache__
