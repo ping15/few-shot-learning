@@ -92,7 +92,7 @@ class GEmbeddingBidirectionalLSTM(tf.keras.models.Model):
         """
         outputs = self.encoder(inputs)
 
-        return outputs
+        return tf.add(outputs, inputs)
 
     @classmethod
     @timeit
