@@ -10,7 +10,7 @@ from .base import BaseNetwork
 
 
 class MatchingNetwork(BaseNetwork):
-    def __init__(self, data_loader=None, use_embedding=False, embedding_share_params=False):
+    def __init__(self, data_loader=None, use_embedding=False, embedding_share_params=True):
         super(MatchingNetwork, self).__init__(data_loader)
         self.use_embedding = use_embedding
         self.embedding_share_params = embedding_share_params
