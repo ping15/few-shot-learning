@@ -31,8 +31,8 @@ class CNNEncoder(tf.keras.models.Model):
         self.layer2 = tf.keras.models.Sequential([
             tf.keras.layers.Conv2D(
                 64, kernel_size=3, padding="valid",
-                kernel_initializer=tf.keras.initializers.random_normal(0, 2. / (64 * 3 * 3)),
-                # kernel_initializer="he_normal",
+                # kernel_initializer=tf.keras.initializers.random_normal(0, 2. / (64 * 3 * 3)),
+                kernel_initializer="he_normal",
             ),
             tf.keras.layers.BatchNormalization(momentum=1),
             tf.keras.layers.ReLU(),
@@ -41,8 +41,8 @@ class CNNEncoder(tf.keras.models.Model):
         self.layer3 = tf.keras.models.Sequential([
             tf.keras.layers.Conv2D(
                 64, kernel_size=3, padding="valid",
-                kernel_initializer=tf.keras.initializers.random_normal(0, 2. / (64 * 3 * 3)),
-                # kernel_initializer="he_normal",
+                # kernel_initializer=tf.keras.initializers.random_normal(0, 2. / (64 * 3 * 3)),
+                kernel_initializer="he_normal",
             ),
             tf.keras.layers.BatchNormalization(momentum=1),
             tf.keras.layers.ReLU(),
@@ -50,8 +50,8 @@ class CNNEncoder(tf.keras.models.Model):
         self.layer4 = tf.keras.models.Sequential([
             tf.keras.layers.Conv2D(
                 64, kernel_size=3, padding="valid",
-                kernel_initializer=tf.keras.initializers.random_normal(0, 2. / (64 * 3 * 3)),
-                # kernel_initializer="he_normal",
+                # kernel_initializer=tf.keras.initializers.random_normal(0, 2. / (64 * 3 * 3)),
+                kernel_initializer="he_normal",
             ),
             tf.keras.layers.BatchNormalization(momentum=1),
             tf.keras.layers.ReLU(),

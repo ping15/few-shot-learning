@@ -7,4 +7,4 @@ from dataLoader.miniDataLoader2 import MiniImageDataLoader
 
 network = MatchingNetwork(data_loader=OmniglotDataLoader)
 
-network.train(20, 2)
+network.train(2000, 2)
