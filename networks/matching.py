@@ -10,9 +10,10 @@ from .base import BaseNetwork
 
 
 class MatchingNetwork(BaseNetwork):
-    def __init__(self, data_loader=None, use_embedding=True):
+    def __init__(self, data_loader=None, use_embedding=False, embedding_share_params=True):
         super(MatchingNetwork, self).__init__(data_loader)
         self.use_embedding = use_embedding
+        self.embedding_share_params = embedding_share_params
         self.encoder = CNNEncoder()
         self.g_embedding = GEmbeddingBidirectionalLSTM(settings.LAYER_SIZES, settings.BATCH_SIZE)
         self.f_embedding = FEmbeddingBidirectionalLSTM(settings.UNITS)
@@ -32,8 +33,12 @@ class MatchingNetwork(BaseNetwork):
         test_futures = self.encoder(test_images, training=True)
 
         if self.use_embedding:
-            train_image_embeddings = self.g_embedding(train_futures, training=True)
-            test_image_embeddings = self.f_embedding(train_image_embeddings, test_futures, training=True)
+            if self.embedding_share_params:
+                train_image_embeddings = self.g_embedding(train_futures, training=True)
+                test_image_embeddings = self.g_embedding(train_futures, training=True)
+            else:
+                train_image_embeddings = self.g_embedding(train_futures, training=True)
+                test_image_embeddings = self.f_embedding(train_image_embeddings, test_futures, training=True)
         else:
             train_image_embeddings = train_futures
             test_image_embeddings = test_futures
@@ -47,14 +52,17 @@ class MatchingNetwork(BaseNetwork):
     @property
     def trainable_variables(self):
         if self.use_embedding:
-            return self.encoder.trainable_variables + self.g_embedding.trainable_variables + \
-                   self.f_embedding.trainable_variables
+            if self.embedding_share_params:
+                return self.encoder.trainable_variables + self.g_embedding.trainable_variables
+            else:
+                return self.encoder.trainable_variables + self.g_embedding.trainable_variables + \
+                       self.f_embedding.trainable_variables
         return self.encoder.trainable_variables
 
     @property
     def loss_function(self):
-        return tf.keras.losses.MeanSquaredError()
-        # return tf.keras.losses.CategoricalCrossentropy(from_logits=True)
+        # return tf.keras.losses.MeanSquaredError()
+        return tf.keras.losses.CategoricalCrossentropy()
 
     def train(self, epochs, count_per_epoch):
         train_loss = []
