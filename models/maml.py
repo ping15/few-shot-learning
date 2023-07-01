@@ -2,6 +2,7 @@ import tensorflow as tf
 
 from configs import settings
 
+
 def conv_block(inputs, filters, kernel_size):
     x = tf.layers.conv2d(inputs, filters, kernel_size, padding='same')
     x = tf.layers.batch_normalization(x)
