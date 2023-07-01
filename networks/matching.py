@@ -10,13 +10,14 @@ from .base import BaseNetwork
 
 
 class MatchingNetwork(BaseNetwork):
-    def __init__(self, data_loader=None, use_embedding=False, embedding_share_params=True):
+    def __init__(self, data_loader=None, use_embedding=False, embedding_share_params=False):
         super(MatchingNetwork, self).__init__(data_loader)
         self.use_embedding = use_embedding
         self.embedding_share_params = embedding_share_params
         self.encoder = CNNEncoder()
         self.g_embedding = GEmbeddingBidirectionalLSTM(settings.LAYER_SIZES, settings.BATCH_SIZE)
-        self.f_embedding = FEmbeddingBidirectionalLSTM(settings.UNITS)
+        # self.f_embedding = FEmbeddingBidirectionalLSTM(settings.UNITS)
+        self.f_embedding = FEmbeddingBidirectionalLSTM(settings.LAYER_SIZES, settings.BATCH_SIZE)
         self.cos_distance = DistanceNetwork(settings.TRAIN_TEST_WAY)
 
     def forward(self, train_images, train_labels, test_images, test_labels):
@@ -35,10 +36,11 @@ class MatchingNetwork(BaseNetwork):
         if self.use_embedding:
             if self.embedding_share_params:
                 train_image_embeddings = self.g_embedding(train_futures, training=True)
-                test_image_embeddings = self.g_embedding(train_futures, training=True)
+                test_image_embeddings = self.g_embedding(test_futures, training=True)
             else:
                 train_image_embeddings = self.g_embedding(train_futures, training=True)
-                test_image_embeddings = self.f_embedding(train_image_embeddings, test_futures, training=True)
+                test_image_embeddings = self.f_embedding(test_futures, training=True)
+                # test_image_embeddings = self.f_embedding(train_image_embeddings, test_futures, training=True)
         else:
             train_image_embeddings = train_futures
             test_image_embeddings = test_futures
