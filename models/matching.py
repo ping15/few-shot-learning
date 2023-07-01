@@ -135,8 +135,6 @@ class FEmbeddingBidirectionalLSTM(tf.keras.models.Model):
         :param query_embeddings: [batch_size, query_num, units]
         :return:
         """
-        lstm = tf.keras.layers.LSTM(self.units, return_sequences=True, return_state=True)
-
         # output = None
         # for step in range(2):
         #     output, state1, state2 = lstm(query_embeddings, initial_state=prev_state)  # output: (batch_size, 64)
@@ -169,7 +167,7 @@ class FEmbeddingBidirectionalLSTM(tf.keras.models.Model):
                 attention_features_summed = tf.reduce_sum(attention_features, axis=1)
                 c_h = (c_h[0], c_h[1] + attention_features_summed)  # [batch_size, units]
                 x, h_c = fw_lstm_cells_encoder(sub_query_embeddings, states=c_h)
-                attentional_softmax = tf.keras.layers.Dense(support_num, activation=tf.nn.softmax)(x)
+                attentional_softmax = tf.keras.layers.Dense(support_num, activation="softmax")(x)
             output.append(x)
         return tf.transpose(tf.stack(output), perm=[1, 0, 2])
 
