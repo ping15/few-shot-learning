@@ -20,35 +20,41 @@ class CNNEncoder(tf.keras.models.Model):
         super(CNNEncoder, self).__init__()
         self.layer1 = tf.keras.models.Sequential([
             tf.keras.layers.Conv2D(
-                64, kernel_size=2, padding="same", strides=1
+                64, kernel_size=3, padding="valid",
+                kernel_initializer=tf.keras.initializers.random_normal(0, 2. / (64 * 3 * 3)),
+                # kernel_initializer="he_normal",
             ),
-            tf.keras.layers.LeakyReLU(),
-            tf.keras.layers.BatchNormalization(),
-            tf.keras.layers.MaxPool2D(),
+            tf.keras.layers.BatchNormalization(momentum=1),
+            tf.keras.layers.ReLU(),
+            tf.keras.layers.MaxPool2D(2),
         ])
         self.layer2 = tf.keras.models.Sequential([
             tf.keras.layers.Conv2D(
-                64, kernel_size=2, padding="same", strides=1
+                64, kernel_size=3, padding="valid",
+                kernel_initializer=tf.keras.initializers.random_normal(0, 2. / (64 * 3 * 3)),
+                # kernel_initializer="he_normal",
             ),
-            tf.keras.layers.LeakyReLU(),
-            tf.keras.layers.BatchNormalization(),
-            tf.keras.layers.MaxPool2D(),
+            tf.keras.layers.BatchNormalization(momentum=1),
+            tf.keras.layers.ReLU(),
+            tf.keras.layers.MaxPool2D(2),
         ])
         self.layer3 = tf.keras.models.Sequential([
             tf.keras.layers.Conv2D(
-                64, kernel_size=2, padding="same", strides=1
+                64, kernel_size=3, padding="valid",
+                kernel_initializer=tf.keras.initializers.random_normal(0, 2. / (64 * 3 * 3)),
+                # kernel_initializer="he_normal",
             ),
-            tf.keras.layers.LeakyReLU(),
             tf.keras.layers.BatchNormalization(momentum=1),
-            tf.keras.layers.MaxPool2D(),
+            tf.keras.layers.ReLU(),
         ])
         self.layer4 = tf.keras.models.Sequential([
             tf.keras.layers.Conv2D(
-                64, kernel_size=2, padding="same", strides=1
+                64, kernel_size=3, padding="valid",
+                kernel_initializer=tf.keras.initializers.random_normal(0, 2. / (64 * 3 * 3)),
+                # kernel_initializer="he_normal",
             ),
-            tf.keras.layers.LeakyReLU(),
-            tf.keras.layers.BatchNormalization(),
-            tf.keras.layers.MaxPool2D(),
+            tf.keras.layers.BatchNormalization(momentum=1),
+            tf.keras.layers.ReLU(),
         ])
         self.flatten = tf.keras.layers.Flatten()
 
