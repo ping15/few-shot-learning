@@ -20,33 +20,35 @@ class CNNEncoder(tf.keras.models.Model):
         super(CNNEncoder, self).__init__()
         self.layer1 = tf.keras.models.Sequential([
             tf.keras.layers.Conv2D(
-                64, kernel_size=3, padding="valid",
+                64, kernel_size=2, padding="same", strides=1
             ),
-            tf.keras.layers.BatchNormalization(momentum=1),
-            tf.keras.layers.ReLU(),
-            tf.keras.layers.MaxPool2D(2),
+            tf.keras.layers.LeakyReLU(),
+            tf.keras.layers.BatchNormalization(),
+            tf.keras.layers.MaxPool2D(),
         ])
         self.layer2 = tf.keras.models.Sequential([
             tf.keras.layers.Conv2D(
-                64, kernel_size=3, padding="valid",
+                64, kernel_size=2, padding="same", strides=1
             ),
-            tf.keras.layers.BatchNormalization(momentum=1),
-            tf.keras.layers.ReLU(),
-            tf.keras.layers.MaxPool2D(2),
+            tf.keras.layers.LeakyReLU(),
+            tf.keras.layers.BatchNormalization(),
+            tf.keras.layers.MaxPool2D(),
         ])
         self.layer3 = tf.keras.models.Sequential([
             tf.keras.layers.Conv2D(
-                64, kernel_size=3, padding="valid",
+                64, kernel_size=2, padding="same", strides=1
             ),
+            tf.keras.layers.LeakyReLU(),
             tf.keras.layers.BatchNormalization(momentum=1),
-            tf.keras.layers.ReLU(),
+            tf.keras.layers.MaxPool2D(),
         ])
         self.layer4 = tf.keras.models.Sequential([
             tf.keras.layers.Conv2D(
-                64, kernel_size=3, padding="valid",
+                64, kernel_size=2, padding="same", strides=1
             ),
-            tf.keras.layers.BatchNormalization(momentum=1),
-            tf.keras.layers.ReLU(),
+            tf.keras.layers.LeakyReLU(),
+            tf.keras.layers.BatchNormalization(),
+            tf.keras.layers.MaxPool2D(),
         ])
         self.flatten = tf.keras.layers.Flatten()
 
@@ -71,6 +73,7 @@ class CNNEncoder(tf.keras.models.Model):
         """测试代码"""
         batch_images = tf.random.normal((32, 21, 28, 28, 1))
         res = cls()(batch_images)
+        print(res.shape)
         assert res.shape == (32, 21, 64)
 
 
