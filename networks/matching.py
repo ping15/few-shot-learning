@@ -10,13 +10,13 @@ from .base import BaseNetwork
 
 
 class MatchingNetwork(BaseNetwork):
-    def __init__(self, data_loader=None, use_embedding=False, embedding_share_params=True):
+    def __init__(self, data_loader=None, use_embedding=False, embedding_share_params=False):
         super(MatchingNetwork, self).__init__(data_loader)
         self.use_embedding = use_embedding
         self.embedding_share_params = embedding_share_params
         self.encoder = CNNEncoder()
-        # self.g_embedding = GEmbeddingBidirectionalLSTM(settings.LAYER_SIZES, settings.BATCH_SIZE)
-        self.g_embedding = GEmbeddingBidirectionalLSTM(settings.UNITS)
+        self.g_embedding = GEmbeddingBidirectionalLSTM(settings.LAYER_SIZES, settings.BATCH_SIZE)
+        # self.g_embedding = GEmbeddingBidirectionalLSTM(settings.UNITS)
         self.f_embedding = FEmbeddingBidirectionalLSTM(settings.UNITS)
         self.cos_distance = DistanceNetwork(settings.TRAIN_TEST_WAY)
 
