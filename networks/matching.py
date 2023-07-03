@@ -4,7 +4,13 @@ import time
 import tensorflow as tf
 from tensorflow.python.keras.utils import losses_utils
 
-from models.matching import CNNEncoder, GEmbeddingBidirectionalLSTM, FEmbeddingBidirectionalLSTM, DistanceNetwork
+from models.matching import (
+    CNNEncoder,
+    GEmbeddingBidirectionalLSTM,
+    FEmbeddingBidirectionalLSTM,
+    DistanceNetwork,
+    AttentionalClassify
+)
 from configs import settings
 from .base import BaseNetwork
 
@@ -19,15 +25,16 @@ class MatchingNetwork(BaseNetwork):
         # self.g_embedding = GEmbeddingBidirectionalLSTM(settings.UNITS)
         self.f_embedding = FEmbeddingBidirectionalLSTM(settings.UNITS)
         self.cos_distance = DistanceNetwork(settings.TRAIN_TEST_WAY)
+        self.attentional_classify = AttentionalClassify()
 
     def forward(self, train_images, train_labels, test_images, test_labels):
         """
-        :param train_images: [batch_size, class_num, num_per_class,
+        :param train_images: [batch_size, class_num * num_per_class,
                               image_height, image_width, image_channel]
-        :param train_labels: [batch_size, class_num, num_per_class]
-        :param test_images: [batch_szie, class_num, query_num,
-                             image_height, image_width, image_channel]
-        :param test_labels: [batch_size, class_num, query_num]
+        :param train_labels: [batch_size, class_num * num_per_class]
+        :param test_images: [batch_szie, query_num, image_height,
+                             image_width, image_channel]
+        :param test_labels: [batch_size, query_num]
         :return:
         """
         train_futures = self.encoder(train_images, training=True)
@@ -46,6 +53,7 @@ class MatchingNetwork(BaseNetwork):
             test_image_embeddings = test_futures
 
         result = self.cos_distance(train_image_embeddings, train_labels, test_image_embeddings)
+        result = self.attentional_classify(result, test_labels)
 
         result = tf.keras.layers.Softmax(axis=-1)(result)
 
