@@ -83,31 +83,55 @@ class CNNEncoder(tf.keras.models.Model):
 
 
 class GEmbeddingBidirectionalLSTM(tf.keras.models.Model):
-    def __init__(self, layer_sizes, batch_size):
-        super(GEmbeddingBidirectionalLSTM, self).__init__()
-        self.layer_sizes = layer_sizes
-        self.batch_size = batch_size
+    # def __init__(self, layer_sizes, batch_size):
+    #     super(GEmbeddingBidirectionalLSTM, self).__init__()
+    #     self.layer_sizes = layer_sizes
+    #     self.batch_size = batch_size
+    #
+    #     self.encoder = tf.keras.layers.Bidirectional(tf.keras.layers.RNN(
+    #         [tf.keras.layers.LSTMCell(units=self.layer_sizes[i]) for i in range(len(self.layer_sizes))],
+    #         return_sequences=True
+    #     ))
 
-        self.encoder = tf.keras.layers.Bidirectional(tf.keras.layers.RNN(
-            [tf.keras.layers.LSTMCell(units=self.layer_sizes[i]) for i in range(len(self.layer_sizes))],
-            return_sequences=True
-        ))
+    def __init__(self, input_dim):
+        super(GEmbeddingBidirectionalLSTM, self).__init__()
+        self.embedding = tf.keras.layers.Dense(input_dim)
+        self.attention = tf.keras.layers.Attention()
+        self.dense = tf.keras.layers.Dense(input_dim, activation='relu')
 
     def call(self, inputs, training=None, mask=None, *args, **kwargs):
         """
         :param inputs: [batch_size, class_num * num_per_class, 64]
         :return: [batch_size, class_num * num_per_class, 64]
         """
-        outputs = self.encoder(inputs)
+        # outputs = self.encoder(inputs)
+        #
+        # return tf.add(outputs, inputs)
 
-        return outputs
+        x = self.embedding(inputs)
+
+        attn_output = self.attention([x, x])
+
+        concat_output = tf.concat([x, attn_output], axis=-1)
+
+        output = self.dense(concat_output)
+
+        return output
+
+    # @classmethod
+    # @timeit
+    # def test(cls):
+    #     """测试代码"""
+    #     query_embeddings = tf.random.normal((32, 4 * 5, 64))
+    #     res = cls([32, 32, 32], 32)(query_embeddings)
+    #     assert res.shape == (32, 20, 64)
 
     @classmethod
     @timeit
     def test(cls):
         """测试代码"""
         query_embeddings = tf.random.normal((32, 4 * 5, 64))
-        res = cls([32, 32, 32], 32)(query_embeddings)
+        res = cls(64)(query_embeddings)
         assert res.shape == (32, 20, 64)
 
 

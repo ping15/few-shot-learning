@@ -21,9 +21,9 @@ class MatchingNetwork(BaseNetwork):
         self.use_embedding = use_embedding
         self.embedding_share_params = embedding_share_params
         self.encoder = CNNEncoder()
-        self.g_embedding = GEmbeddingBidirectionalLSTM(settings.LAYER_SIZES, settings.BATCH_SIZE)
+        # self.g_embedding = GEmbeddingBidirectionalLSTM(settings.LAYER_SIZES, settings.BATCH_SIZE)
+        self.g_embedding = GEmbeddingBidirectionalLSTM(settings.UNITS)
         self.f_embedding = FEmbeddingBidirectionalLSTM(settings.UNITS)
-        # self.f_embedding = FEmbeddingBidirectionalLSTM(settings.LAYER_SIZES, settings.BATCH_SIZE)
         self.cos_distance = DistanceNetwork(settings.TRAIN_TEST_WAY)
         self.attentional_classify = AttentionalClassify()
 
@@ -71,8 +71,8 @@ class MatchingNetwork(BaseNetwork):
 
     @property
     def loss_function(self):
-        # return tf.keras.losses.MeanSquaredError()
-        return tf.keras.losses.CategoricalCrossentropy()
+        return tf.keras.losses.MeanSquaredError()
+        # return tf.keras.losses.CategoricalCrossentropy()
 
     def train(self, epochs, count_per_epoch):
         train_loss = []
