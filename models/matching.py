@@ -79,7 +79,6 @@ class CNNEncoder(tf.keras.models.Model):
         """测试代码"""
         batch_images = tf.random.normal((32, 21, 28, 28, 1))
         res = cls()(batch_images)
-        print(res.shape)
         assert res.shape == (32, 21, 64)
 
 
@@ -274,8 +273,30 @@ class DistanceNetwork:
         assert res.shape == (32, 21, 5)
 
 
+class AttentionalClassify:
+    def __call__(self, similarities, query_labels, *args, **kwargs):
+        """
+        :param similarities: [batch_size, query_number, class_number]
+        :param query_labels: [batch_size, query_number]
+        """
+        predictions = tf.expand_dims(query_labels, axis=-1) * similarities
+
+        return predictions
+
+    @classmethod
+    @timeit
+    def test(cls):
+        batch_size, query_number, class_number = 32, 19, 5
+        similarities = tf.random.normal((batch_size, query_number, class_number))
+        query_labels = tf.random.normal((batch_size, query_number))
+
+        outputs = cls()(similarities, query_labels)
+        assert outputs.shape == (batch_size, query_number, class_number)
+
+
 if __name__ == "__main__":
     CNNEncoder.test()
     GEmbeddingBidirectionalLSTM.test()
     FEmbeddingBidirectionalLSTM.test()
     DistanceNetwork.test()
+    AttentionalClassify.test()
