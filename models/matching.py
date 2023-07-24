@@ -23,22 +23,22 @@ class CNNEncoder(tf.keras.models.Model):
                 64, kernel_size=3, padding="valid",
                 # kernel_initializer=tf.keras.initializers.random_normal(0, 2. / (64 * 3 * 3)),
                 kernel_initializer="he_normal",
-                strides=2
             ),
             tf.keras.layers.BatchNormalization(momentum=1),
             tf.keras.layers.ReLU(),
-            # tf.keras.layers.MaxPool2D(2),
+            tf.keras.layers.MaxPool2D(2),
+            # tf.keras.layers.Dropout(0.3),
         ])
         self.layer2 = tf.keras.models.Sequential([
             tf.keras.layers.Conv2D(
                 64, kernel_size=3, padding="valid",
                 # kernel_initializer=tf.keras.initializers.random_normal(0, 2. / (64 * 3 * 3)),
                 kernel_initializer="he_normal",
-                strides=2
             ),
             tf.keras.layers.BatchNormalization(momentum=1),
             tf.keras.layers.ReLU(),
-            # tf.keras.layers.MaxPool2D(2),
+            tf.keras.layers.MaxPool2D(2),
+            # tf.keras.layers.Dropout(0.3),
         ])
         self.layer3 = tf.keras.models.Sequential([
             tf.keras.layers.Conv2D(
@@ -48,6 +48,7 @@ class CNNEncoder(tf.keras.models.Model):
             ),
             tf.keras.layers.BatchNormalization(momentum=1),
             tf.keras.layers.ReLU(),
+            # tf.keras.layers.Dropout(0.3),
         ])
         self.layer4 = tf.keras.models.Sequential([
             tf.keras.layers.Conv2D(
@@ -57,9 +58,10 @@ class CNNEncoder(tf.keras.models.Model):
             ),
             tf.keras.layers.BatchNormalization(momentum=1),
             tf.keras.layers.ReLU(),
+            # tf.keras.layers.Dropout(0.3),
         ])
-        # self.flatten = tf.keras.layers.Flatten()
-        self.flatten = tf.keras.layers.GlobalAvgPool2D()
+        self.flatten = tf.keras.layers.Flatten()
+        # self.flatten = tf.keras.layers.GlobalAvgPool2D()
 
     def call(self, inputs, training=None, mask=None):
         """
@@ -196,7 +198,7 @@ class FEmbeddingBidirectionalLSTM(tf.keras.models.Model):
             c_h = (h, h)
             c_h = (c_h[0], c_h[1] + sub_query_embeddings)  # [batch_size, units]
             x = None
-            for _ in range(support_num):
+            for _ in range(5):
                 attentional_softmax = tf.expand_dims(attentional_softmax, axis=2)  # [batch_size, support_num, 1]
                 attention_features = support_embeddings * attentional_softmax
                 attention_features_summed = tf.reduce_sum(attention_features, axis=1)
@@ -306,7 +308,7 @@ class AttentionalClassify:
         :param similarities: [batch_size, query_number, class_number]
         :param query_labels: [batch_size, query_number]
         """
-        predictions = tf.expand_dims(query_labels, axis=-1) * similarities
+        predictions = tf.expand_dims(tf.cast(query_labels, dtype=tf.float32), axis=-1) * similarities
 
         return predictions
 

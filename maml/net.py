@@ -66,13 +66,13 @@ class MAML:
 
         meta_weights = self.meta_model.get_weights()
 
-        # meta_support_image, meta_support_label, meta_query_image, meta_query_label = next(train_data)
-        meta_support_image, meta_support_label, meta_query_image, meta_query_label = self.get_batch_data(
-            training=training)
+        meta_support_image, meta_support_label, meta_query_image, meta_query_label = next(train_data)
+        # meta_support_image, meta_support_label, meta_query_image, meta_query_label = self.get_batch_data(
+        #     training=training)
         for support_image, support_label in zip(meta_support_image, meta_support_label):
             self.meta_model.set_weights(meta_weights)
             for _ in range(inner_step):
-                if train_step:
+                if not train_step:
                     support_image, support_label = self.shuffle(support_image, support_label)
                 with tf.GradientTape() as tape:
                     logits = self.meta_model(support_image, training=True)
@@ -101,8 +101,8 @@ class MAML:
                 acc = tf.reduce_mean(acc)
                 batch_acc.append(acc)
 
-                with open("maml_omniglot_5way_1shot_label_prediction.pkl", "wb") as f:
-                    pickle.dump((tf.one_hot(query_label, axis=-1, depth=5), logits), f)
+                # with open("maml_omniglot_5way_1shot_label_prediction.pkl", "wb") as f:
+                #     pickle.dump((tf.one_hot(query_label, axis=-1, depth=5), logits), f)
 
             mean_acc = tf.reduce_mean(batch_acc)
             mean_loss = tf.reduce_mean(batch_loss)

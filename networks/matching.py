@@ -16,7 +16,7 @@ from .base import BaseNetwork
 
 
 class MatchingNetwork(BaseNetwork):
-    def __init__(self, data_loader=None, use_embedding=False, embedding_share_params=False):
+    def __init__(self, data_loader=None, use_embedding=True, embedding_share_params=True):
         super(MatchingNetwork, self).__init__(data_loader)
         self.use_embedding = use_embedding
         self.embedding_share_params = embedding_share_params
@@ -46,8 +46,8 @@ class MatchingNetwork(BaseNetwork):
                 test_image_embeddings = self.g_embedding(test_futures, training=True)
             else:
                 train_image_embeddings = self.g_embedding(train_futures, training=True)
-                test_image_embeddings = self.f_embedding(test_futures, training=True)
-                # test_image_embeddings = self.f_embedding(train_image_embeddings, test_futures, training=True)
+                # test_image_embeddings = self.f_embedding(test_futures, training=True)
+                test_image_embeddings = self.f_embedding(train_image_embeddings, test_futures, training=True)
         else:
             train_image_embeddings = train_futures
             test_image_embeddings = test_futures
