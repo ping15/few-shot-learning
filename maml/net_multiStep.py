@@ -62,18 +62,14 @@ class MAML:
                        outer_optimizer=None, train_step=True, training=True):
         batch_acc = []
         batch_loss = []
-        task_weights = []
+        task_weights = {}
 
         meta_weights = self.meta_model.get_weights()
 
         meta_support_image, meta_support_label, meta_query_image, meta_query_label = next(train_data)
-        # meta_support_image, meta_support_label, meta_query_image, meta_query_label = self.get_batch_data(
-        #     training=training)
-
-        multi_loss = []
-        for support_image, support_label in zip(meta_support_image, meta_support_label):
+        for i, (support_image, support_label) in enumerate(zip(meta_support_image, meta_support_label)):
             self.meta_model.set_weights(meta_weights)
-            for _ in range(inner_step):
+            for j in range(inner_step):
                 if train_step:
                     support_image, support_label = self.shuffle(support_image, support_label)
                 with tf.GradientTape() as tape:
@@ -83,51 +79,30 @@ class MAML:
 
                 grads = tape.gradient(loss, self.meta_model.trainable_variables)
                 inner_optimizer.apply_gradients(zip(grads, self.meta_model.trainable_variables))
+                if j == 0:
+                    task_weights[i] = {}
 
-                for i, (query_image, query_label) in enumerate(zip(meta_query_image, meta_query_label)):
-                    logits = self.meta_model(query_image, training=True)
-                    loss = tf.keras.losses.sparse_categorical_crossentropy(query_label, logits)
-                    loss = tf.reduce_mean(loss)
-                    batch_loss.append(loss)
-
-                    acc = tf.cast(tf.argmax(logits, axis=-1) == query_label, tf.float32)
-                    acc = tf.reduce_mean(acc)
-                    batch_acc.append(acc)
-
-                    with open("maml_omniglot_5way_1shot_label_prediction.pkl", "wb") as f:
-                        pickle.dump((tf.one_hot(query_label, axis=-1, depth=5), logits), f)
-
-                mean_acc = tf.reduce_mean(batch_acc)
-                mean_loss = tf.reduce_mean(batch_loss)
-
-                multi_loss.append(mean_loss)
-
-            task_weights.append(self.meta_model.get_weights())
-
-        multi_loss = tf.reduce_mean(multi_loss)
-
-        self.meta_model.set_weights(meta_weights)
-        if outer_optimizer:
-            grads = tape.gradient(multi_loss, self.meta_model.trainable_variables)
-            outer_optimizer.apply_gradients(zip(grads, self.meta_model.trainable_variables))
+                task_weights[i][j] = self.meta_model.get_weights()
 
         for i, (query_image, query_label) in enumerate(zip(meta_query_image, meta_query_label)):
-            self.meta_model.set_weights(task_weights[i])
-            with tf.GradientTape() as t:
+            for j in range(inner_step):
+                self.meta_model.set_weights(task_weights[i][j])
                 logits = self.meta_model(query_image, training=True)
                 loss = tf.keras.losses.sparse_categorical_crossentropy(query_label, logits)
 
-            gradients = t.gradient(loss, self.meta_model.trainable_variables)
-            inner_optimizer.apply_gradients(zip(gradients, self.meta_model.trainable_variables))
+                loss = tf.reduce_mean(loss)
+                batch_loss.append(loss)
 
-            loss = tf.reduce_mean(loss)
-            batch_loss.append(loss)
-
-            acc = tf.cast(tf.argmax(logits, axis=-1) == query_label, tf.float32)
-            acc = tf.reduce_mean(acc)
-            batch_acc.append(acc)
+                acc = tf.cast(tf.argmax(logits, axis=-1) == query_label, tf.float32)
+                acc = tf.reduce_mean(acc)
+                batch_acc.append(acc)
 
         mean_acc = tf.reduce_mean(batch_acc)
         mean_loss = tf.reduce_mean(batch_loss)
+
+        self.meta_model.set_weights(meta_weights)
+        if outer_optimizer:
+            grads = tape.gradient(mean_loss, self.meta_model.trainable_variables)
+            outer_optimizer.apply_gradients(zip(grads, self.meta_model.trainable_variables))
 
         return mean_loss, mean_acc
