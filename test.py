@@ -1,9 +1,1 @@
-import tensorflow as tf
-
-a = tf.complex(tf.zeros(64), tf.ones(64))
-b = tf.complex(tf.zeros(64), tf.ones(64))
-
-print(a.shape, b.shape)
-cos_distance = tf.keras.losses.CosineSimilarity(axis=0)
-result = cos_distance(a, b)
-print(result)
+{'errcode': 0, 'errmsg': 'ok', 'external_contact': {'external_userid': 'wmSdTCDAAAt1MeEriTSHp80EXJmV-YMg', 'name': 'Gqp', 'gender': 0, 'enter_type': 1, 'corpid': 'wpSdTCDAAAe7EVggfsvSKNR9uMXRILFA'}, 'follow_user': [{'userid': 'woSdTCDAAAIGbDORHv24mi_xteTEJavQ', 'remark': 'Gqp', 'description': '', 'tags': [{'group_name': '哗啦啦_6177a8f406807b95', 'tag_name': '年龄1', 'type': 1, 'tag_id': 'etSdTCDAAAg7wvEXPTLsRM3z5T69U2KA'}, {'group_name': '444', 'tag_name': '啊啊啊', 'type': 1, 'tag_id': 'etSdTCDAAAMYMD3S9AzYaUCAz1aXlgPQ'}, {'group_name': '省份', 'tag_name': '广西', 'type': 1, 'tag_id': 'etSdTCDAAAh6iF3Hr_XUvQbElo6sRKoA'}, {'group_name': '444', 'tag_name': '测试055', 'type': 1, 'tag_id': 'etSdTCDAAA-NhbOuTo5wgVz-p8q-f_RQ'}, {'group_name': '444', 'tag_name': '六月2', 'type': 1, 'tag_id': 'etSdTCDAAAi5tSw40-TDHUHDxWeYqUpg'}, {'group_name': '444', 'tag_name': '六月3', 'type': 1, 'tag_id': 'etSdTCDAAAcSykoJwJpFYsizJLVdj7Ug'}, {'group_name': '444', 'tag_name': '测试新建刷新的', 'type': 1, 'tag_id': 'etSdTCDAAAp-FsHlZS2vbxHTZthJUW8Q'}, {'group_name': '444', 'tag_name': '测试新建的呀', 'type': 1, 'tag_id': 'etSdTCDAAA539-Mi_V-AsU1-JTbt2kNA'}, {'group_name': '444', 'tag_name': 'second', 'type': 1, 'tag_id': 'etSdTCDAAAxDtEKhZxn75-D3ZboLsV7A'}], 'remark_mobiles': [], 'add_way': 1, 'oper_userid': 'wmSdTCDAAAt1MeEriTSHp80EXJmV-YMg', 'first_add_time': 1679025971, 'last_add_time': 1679025971}, {'userid': 'woSdTCDAAAEqzO3tRPwWb-gdZVjvxANg', 'remark': 'Gqp', 'description': '', 'tags': [], 'remark_mobiles': [], 'add_way': 0, 'first_add_time': 1689645941, 'last_add_time': 1689645941}]}

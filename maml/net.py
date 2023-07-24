@@ -66,9 +66,7 @@ class MAML:
 
         meta_weights = self.meta_model.get_weights()
 
-        # meta_support_image, meta_support_label, meta_query_image, meta_query_label = next(train_data)
-        meta_support_image, meta_support_label, meta_query_image, meta_query_label = self.get_batch_data(
-            training=training)
+        meta_support_image, meta_support_label, meta_query_image, meta_query_label = next(train_data)
         for support_image, support_label in zip(meta_support_image, meta_support_label):
             self.meta_model.set_weights(meta_weights)
             for _ in range(inner_step):
