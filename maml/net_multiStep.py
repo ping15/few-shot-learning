@@ -84,21 +84,22 @@ class MAML:
 
                 task_weights[i][j] = self.meta_model.get_weights()
 
-        for i, (query_image, query_label) in enumerate(zip(meta_query_image, meta_query_label)):
-            for j in range(inner_step):
-                self.meta_model.set_weights(task_weights[i][j])
-                logits = self.meta_model(query_image, training=True)
-                loss = tf.keras.losses.sparse_categorical_crossentropy(query_label, logits)
+        with tf.GradientTape() as tape:
+            for i, (query_image, query_label) in enumerate(zip(meta_query_image, meta_query_label)):
+                for j in range(inner_step):
+                    self.meta_model.set_weights(task_weights[i][j])
+                    logits = self.meta_model(query_image, training=True)
+                    loss = tf.keras.losses.sparse_categorical_crossentropy(query_label, logits)
 
-                loss = tf.reduce_mean(loss)
-                batch_loss.append(loss)
+                    loss = tf.reduce_mean(loss)
+                    batch_loss.append(loss)
 
-                acc = tf.cast(tf.argmax(logits, axis=-1) == query_label, tf.float32)
-                acc = tf.reduce_mean(acc)
-                batch_acc.append(acc)
+                    acc = tf.cast(tf.argmax(logits, axis=-1) == query_label, tf.float32)
+                    acc = tf.reduce_mean(acc)
+                    batch_acc.append(acc)
 
-        mean_acc = tf.reduce_mean(batch_acc)
-        mean_loss = tf.reduce_mean(batch_loss)
+            mean_acc = tf.reduce_mean(batch_acc)
+            mean_loss = tf.reduce_mean(batch_loss)
 
         self.meta_model.set_weights(meta_weights)
         if outer_optimizer:
