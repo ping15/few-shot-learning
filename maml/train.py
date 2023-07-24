@@ -7,7 +7,8 @@ import tensorflow as tf
 import numpy as np
 
 from dataReader import MAMLDataLoader
-from net import MAML
+# from net import MAML
+from net_multiStep import MAML
 from config import args
 
 train_data = MAMLDataLoader(args.train_data_dir, args.batch_size)
@@ -51,21 +52,17 @@ for e in range(args.epochs):
                                                       inner_step=15,
                                                       train_step=False,
                                                       training=False)
-        # print(type(batch_val_loss))
 
         val_meta_loss.append(batch_val_loss)
         val_meta_acc.append(val_acc)
         val_progbar.update(i + 1, [('val_loss', np.mean(val_meta_loss)),
                                    ('val_accuracy', np.mean(val_meta_acc))])
 
-    maml.meta_model.save_weights("maml_omniglot_5way_1shot.h5")
+    # maml.meta_model.save_weights("maml_omniglot_5way_1shot.h5")
     train_loss_list.append(np.mean(train_meta_loss))
     train_accuracy_list.append(np.mean(train_meta_acc))
     test_loss_list.append(np.mean(val_meta_loss))
     test_accuracy_list.append(np.mean(val_meta_acc))
-    total_time = total_time + (time.time() - start)
-    if (e + 1) % 2 == 0:
-        print("time: {:.2f} ".format(total_time * 50))
 
 with open("maml_omniglot_5way_1shot.pkl", "wb") as f:
     pickle.dump((train_loss_list, train_accuracy_list, test_loss_list, test_accuracy_list), f)

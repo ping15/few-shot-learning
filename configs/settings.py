@@ -1,6 +1,6 @@
 MINI_DATA_BASE_PATH = "datas/miniImagenet"
-OMNIGLOT_DATA_BASE_PATH = "datas/omniglot_resized"
-# OMNIGLOT_DATA_BASE_PATH = "../datas/omniglot_resized"
+# OMNIGLOT_DATA_BASE_PATH = "datas/omniglot_resized"
+OMNIGLOT_DATA_BASE_PATH = "../datas/omniglot_resized"
 
 TRAIN_NUMBER = 1200
 # TRAIN_NUMBER = 70
