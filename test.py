@@ -1,1 +1,34 @@
-{'errcode': 0, 'errmsg': 'ok', 'external_contact': {'external_userid': 'wmSdTCDAAAt1MeEriTSHp80EXJmV-YMg', 'name': 'Gqp', 'gender': 0, 'enter_type': 1, 'corpid': 'wpSdTCDAAAe7EVggfsvSKNR9uMXRILFA'}, 'follow_user': [{'userid': 'woSdTCDAAAIGbDORHv24mi_xteTEJavQ', 'remark': 'Gqp', 'description': '', 'tags': [{'group_name': '哗啦啦_6177a8f406807b95', 'tag_name': '年龄1', 'type': 1, 'tag_id': 'etSdTCDAAAg7wvEXPTLsRM3z5T69U2KA'}, {'group_name': '444', 'tag_name': '啊啊啊', 'type': 1, 'tag_id': 'etSdTCDAAAMYMD3S9AzYaUCAz1aXlgPQ'}, {'group_name': '省份', 'tag_name': '广西', 'type': 1, 'tag_id': 'etSdTCDAAAh6iF3Hr_XUvQbElo6sRKoA'}, {'group_name': '444', 'tag_name': '测试055', 'type': 1, 'tag_id': 'etSdTCDAAA-NhbOuTo5wgVz-p8q-f_RQ'}, {'group_name': '444', 'tag_name': '六月2', 'type': 1, 'tag_id': 'etSdTCDAAAi5tSw40-TDHUHDxWeYqUpg'}, {'group_name': '444', 'tag_name': '六月3', 'type': 1, 'tag_id': 'etSdTCDAAAcSykoJwJpFYsizJLVdj7Ug'}, {'group_name': '444', 'tag_name': '测试新建刷新的', 'type': 1, 'tag_id': 'etSdTCDAAAp-FsHlZS2vbxHTZthJUW8Q'}, {'group_name': '444', 'tag_name': '测试新建的呀', 'type': 1, 'tag_id': 'etSdTCDAAA539-Mi_V-AsU1-JTbt2kNA'}, {'group_name': '444', 'tag_name': 'second', 'type': 1, 'tag_id': 'etSdTCDAAAxDtEKhZxn75-D3ZboLsV7A'}], 'remark_mobiles': [], 'add_way': 1, 'oper_userid': 'wmSdTCDAAAt1MeEriTSHp80EXJmV-YMg', 'first_add_time': 1679025971, 'last_add_time': 1679025971}, {'userid': 'woSdTCDAAAEqzO3tRPwWb-gdZVjvxANg', 'remark': 'Gqp', 'description': '', 'tags': [], 'remark_mobiles': [], 'add_way': 0, 'first_add_time': 1689645941, 'last_add_time': 1689645941}]}
+import tensorflow as tf
+import numpy as np
+
+
+# 定义余弦退火元优化器学习率函数
+def cosine_annealing_lr(epoch, max_epochs, initial_lr, min_lr):
+    cos_inner = np.pi * (epoch % (max_epochs // 2))
+    cos_inner /= max_epochs // 2
+    cos_out = np.cos(cos_inner) + 1
+    lr = (initial_lr - min_lr) / 2 * cos_out + min_lr
+    return lr
+
+
+# 设置训练参数
+max_epochs = 100
+initial_lr = 0.001
+min_lr = 0.001
+
+# 创建TensorFlow变量
+epoch_var = tf.Variable(0, trainable=False, dtype=tf.int64)
+lr_var = tf.Variable(initial_lr, trainable=False, dtype=tf.float32)
+
+# 定义训练循环
+for epoch in range(max_epochs):
+    # 更新学习率
+    lr = cosine_annealing_lr(epoch, max_epochs, initial_lr, min_lr)
+    lr_var.assign(lr)
+    print(lr_var)
+
+    # 在这里执行模型训练的代码
+    # ...
+
+    # 更新训练周期
+    epoch_var.assign(epoch + 1)
