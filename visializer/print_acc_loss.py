@@ -6,7 +6,7 @@ plt.rcParams['font.sans-serif'] = ['SimHei']  # 设置中文字体为SimHei
 plt.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
 # with open("loss_acc_data.pkl", "rb") as f:
 #     loss, accuracy, val_loss, val_accuracy = pickle.load(f)
-with open("maml_omniglot_5way_1shot.pkl", "rb") as f:
+with open("matching_omniglot_5way_1shot.pkl", "rb") as f:
     loss, accuracy, val_loss, val_accuracy = pickle.load(f)
 
 # 训练损失

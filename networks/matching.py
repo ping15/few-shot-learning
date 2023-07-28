@@ -117,10 +117,10 @@ class MatchingNetwork(BaseNetwork):
             if (epoch + 1) % 5 == 0:
                 print("time: {:.2f} ".format(total_time * 20 / 3600))
                 total_time = 0
-        with open("maml_omniglot_5way_1shot.pkl", "wb") as f:
+        with open("matching_omniglot_5way_1shot.pkl", "wb") as f:
             pickle.dump((train_loss, train_accuracy, test_loss, test_accuracy), f)
 
-        with open("maml_omniglot_5way_1shot_label_prediction.pkl", "wb") as f:
+        with open("matching_omniglot_5way_1shot_label_prediction.pkl", "wb") as f:
             pickle.dump((labels_list, predictions_list), f)
 
     def train_step(self, train_images, train_labels, test_images, test_labels):

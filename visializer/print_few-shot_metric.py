@@ -73,8 +73,9 @@ def print_metric(y_true, y_pred):
     plt.show()
 
 
-with open("maml_omniglot_5way_1shot_label_prediction.pkl", "rb") as f:
+with open("matching_omniglot_5way_1shot_label_prediction.pkl", "rb") as f:
     labels_list, predictions_list = pickle.load(f)
+    labels_list, predictions_list = labels_list[-1], predictions_list[-1]
     labels_list = labels_list[-10]
     labels_list = tf.argmax(np.array(labels_list), axis=-1)
     predictions_list = predictions_list[-10]

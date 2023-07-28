@@ -99,7 +99,7 @@ class MAML:
                 acc = tf.reduce_mean(acc)
                 batch_acc.append(acc)
 
-                # with open("maml_omniglot_5way_1shot_label_prediction.pkl", "wb") as f:
+                # with open("matching_omniglot_5way_1shot_label_prediction.pkl", "wb") as f:
                 #     pickle.dump((tf.one_hot(query_label, axis=-1, depth=5), logits), f)
 
             mean_acc = tf.reduce_mean(batch_acc)

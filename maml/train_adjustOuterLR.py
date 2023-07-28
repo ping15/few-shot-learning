@@ -68,5 +68,5 @@ for e in range(args.epochs):
     test_loss_list.append(np.mean(val_meta_loss))
     test_accuracy_list.append(np.mean(val_meta_acc))
 
-with open("maml_omniglot_5way_1shot.pkl", "wb") as f:
+with open("matching_omniglot_5way_1shot.pkl", "wb") as f:
     pickle.dump((train_loss_list, train_accuracy_list, test_loss_list, test_accuracy_list), f)
