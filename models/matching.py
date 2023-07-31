@@ -172,7 +172,7 @@ class GEmbeddingBidirectionalLSTM(tf.keras.models.Model):
 #         #     # [batch_size, class_num * num_per_class, units]
 #         #     content_based_attention = tf.nn.softmax(
 #         #         tf.multiply(tf.expand_dims(prev_state[1], axis=1), support_embeddings))
-#         #     r_k = tf.reduce_sum(tf.multiply(content_based_attention, support_embeddings), axis=1)  # (batch_size, 64)
+#         #     r_k = tf.reduce_sum(tf.multiply(z, support_embeddings), axis=1)  # (batch_size, 64)
 #         #
 #         #     prev_state = (state1, tf.add(tf.reduce_mean(h_k, axis=1), r_k))
 #
