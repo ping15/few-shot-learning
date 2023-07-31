@@ -45,8 +45,8 @@ from configs import settings
 
 
 class PrototypicalNetwork(BaseNetwork):
-    def __init__(self, dataLoader):
-        super(PrototypicalNetwork, self).__init__(dataLoader)
+    def __init__(self, data_loader):
+        super(PrototypicalNetwork, self).__init__(data_loader=data_loader)
         self.encoder = Encoder()
 
     def euclidean_dist(self, features1, features2):
@@ -124,5 +124,5 @@ class PrototypicalNetwork(BaseNetwork):
         self.test(show=False)
         # self.encoder.load_weights("prototypical_show2.h5")
         super(PrototypicalNetwork, self).train(epochs, count_per_epoch)
-        self.encoder.save_weights("maml_omniglot_5way_1shot.h5")
+        # self.encoder.save_weights("maml_omniglot_5way_1shot.h5")
         self.test()

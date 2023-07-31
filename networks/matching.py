@@ -16,13 +16,13 @@ from .base import BaseNetwork
 
 
 class MatchingNetwork(BaseNetwork):
-    def __init__(self, data_loader=None, use_embedding=False, embedding_share_params=True):
+    def __init__(self, data_loader=None, use_embedding=True, embedding_share_params=True):
         super(MatchingNetwork, self).__init__(data_loader)
         self.use_embedding = use_embedding
         self.embedding_share_params = embedding_share_params
         self.encoder = CNNEncoder()
-        # self.g_embedding = GEmbeddingBidirectionalLSTM(settings.LAYER_SIZES, settings.BATCH_SIZE)
-        self.g_embedding = GEmbeddingBidirectionalLSTM(settings.UNITS)
+        self.g_embedding = GEmbeddingBidirectionalLSTM(settings.LAYER_SIZES, settings.BATCH_SIZE)
+        # self.g_embedding = GEmbeddingBidirectionalLSTM(settings.UNITS)
         self.f_embedding = FEmbeddingBidirectionalLSTM(settings.UNITS)
         self.cos_distance = DistanceNetwork(settings.TRAIN_TEST_WAY)
         self.attentional_classify = AttentionalClassify()
@@ -46,8 +46,8 @@ class MatchingNetwork(BaseNetwork):
                 test_image_embeddings = self.g_embedding(test_futures, training=True)
             else:
                 train_image_embeddings = self.g_embedding(train_futures, training=True)
-                test_image_embeddings = self.f_embedding(test_futures, training=True)
-                # test_image_embeddings = self.f_embedding(train_image_embeddings, test_futures, training=True)
+                # test_image_embeddings = self.f_embedding(test_futures, training=True)
+                test_image_embeddings = self.f_embedding(train_image_embeddings, test_futures, training=True)
         else:
             train_image_embeddings = train_futures
             test_image_embeddings = test_futures
@@ -117,10 +117,10 @@ class MatchingNetwork(BaseNetwork):
             if (epoch + 1) % 5 == 0:
                 print("time: {:.2f} ".format(total_time * 20 / 3600))
                 total_time = 0
-        with open("maml_omniglot_5way_1shot.pkl", "wb") as f:
+        with open("matching_omniglot_5way_1shot.pkl", "wb") as f:
             pickle.dump((train_loss, train_accuracy, test_loss, test_accuracy), f)
 
-        with open("maml_omniglot_5way_1shot_label_prediction.pkl", "wb") as f:
+        with open("matching_omniglot_5way_1shot_label_prediction.pkl", "wb") as f:
             pickle.dump((labels_list, predictions_list), f)
 
     def train_step(self, train_images, train_labels, test_images, test_labels):
