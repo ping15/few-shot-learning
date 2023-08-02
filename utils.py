@@ -84,27 +84,32 @@ def residual_block(input_data, filters, stride=1):
     shortcut = input_data
 
     # 第一个卷积层
-    x = layers.Conv2D(filters, 3, strides=stride, padding='same')(input_data)
+    x = layers.Conv2D(filters, 3, strides=stride, padding='same',
+                      kernel_regularizer=tf.keras.regularizers.l2(0.01))(input_data)
     x = layers.BatchNormalization()(x)
     x = layers.ReLU()(x)
 
     # 第二个卷积层
-    x = layers.Conv2D(filters, 3, padding='same')(x)
+    x = layers.Conv2D(filters, 3, padding='same',
+                      kernel_regularizer=tf.keras.regularizers.l2(0.01))(x)
     x = layers.BatchNormalization()(x)
     x = layers.ReLU()(x)
 
     # 如果输入和输出尺寸不一致，使用1x1卷积调整shortcut的尺寸
     if stride > 1 or input_data.shape[-1] != filters:
-        shortcut = layers.Conv2D(filters, 1, strides=stride, padding='same')(shortcut)
+        shortcut = layers.Conv2D(filters, 1, strides=stride, padding='same',
+                                 kernel_regularizer=tf.keras.regularizers.l2(0.01))(shortcut)
         shortcut = layers.BatchNormalization()(shortcut)
         shortcut = layers.ReLU()(shortcut)
 
     # 添加卷积和dropout
-    shortcut = layers.Conv2D(filters, 3, padding='same')(shortcut)
+    shortcut = layers.Conv2D(filters, 3, padding='same',
+                             kernel_regularizer=tf.keras.regularizers.l2(0.01))(shortcut)
     shortcut = layers.BatchNormalization()(shortcut)
     shortcut = layers.Dropout(0.3)(shortcut)
     shortcut = layers.ReLU()(shortcut)
-    shortcut = layers.Conv2D(filters, 3, padding='same')(shortcut)
+    shortcut = layers.Conv2D(filters, 3, padding='same',
+                             kernel_regularizer=tf.keras.regularizers.l2(0.01))(shortcut)
     shortcut = layers.BatchNormalization()(shortcut)
     shortcut = layers.ReLU()(shortcut)
 
@@ -116,7 +121,8 @@ def residual_block(input_data, filters, stride=1):
 
 def create_wrn28_10():
     input_data = layers.Input(shape=(28, 28, 1))
-    x = layers.Conv2D(16, 3, padding='same')(input_data)
+    x = layers.Conv2D(16, 3, padding='same',
+                      kernel_regularizer=tf.keras.regularizers.l2(0.01))(input_data)
     x = layers.BatchNormalization()(x)
     x = layers.ReLU()(x)
 
@@ -139,11 +145,14 @@ def create_wrn28_10():
     x = layers.GlobalAveragePooling2D()(x)
 
     # 输出层
-    output = layers.Dense(10, activation='softmax')(x)
+    output = layers.Dense(10, activation='softmax',
+                          kernel_regularizer=tf.keras.regularizers.l2(0.01))(x)
 
     model = models.Model(inputs=input_data, outputs=output)
     return model
 
 
 if __name__ == "__main__":
-    print(get_poly_random_number(1000))
+    # print(get_poly_random_number(1000))
+    model = create_wrn28_10()
+    print(model.summary())
