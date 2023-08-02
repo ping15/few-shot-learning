@@ -38,7 +38,7 @@ for e in range(args.epochs):
     for i in range(train_data_steps):
         batch_train_loss, acc = maml.train_on_batch(train_data.get_one_batch(),
                                                     inner_optimizer,
-                                                    inner_step=15,
+                                                    inner_step=1,
                                                     outer_optimizer=outer_optimizer,
                                                     training=True)
 
@@ -50,7 +50,7 @@ for e in range(args.epochs):
     for i in range(val_data_steps):
         batch_val_loss, val_acc = maml.train_on_batch(val_data.get_one_batch(),
                                                       inner_optimizer,
-                                                      inner_step=15,
+                                                      inner_step=1,
                                                       train_step=False,
                                                       training=False)
 

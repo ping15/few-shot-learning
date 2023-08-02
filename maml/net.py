@@ -5,13 +5,15 @@ import tensorflow as tf
 
 from dataLoader.omniglotDataLoader import OmniglotDataLoader
 from config import args
+from utils import create_wrn28_10
 
 
 class MAML:
     def __init__(self, input_shape, num_classes):
         self.input_shape = input_shape
         self.num_classes = num_classes
-        self.meta_model = self.get_maml_model()
+        # self.meta_model = self.get_maml_model()
+        self.meta_model = create_wrn28_10()
         self.data_loader = OmniglotDataLoader()
         self.batch_size = args.batch_size
 

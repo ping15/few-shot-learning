@@ -44,7 +44,7 @@
     <method v="2" />
   </configuration>
   <configuration default="false" name="train" type="PythonConfigurationType" factoryName="Python" singleton="false" nameIsGenerated="true">
-    <module name="few-shot learning" />
+    <module name="relationNetwork" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <envs>
