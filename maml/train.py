@@ -8,7 +8,8 @@ import numpy as np
 
 from dataReader import MAMLDataLoader
 # from net import MAML
-from net_multiStep import MAML
+# from net_multiStep import MAML
+from net_origin import MAML
 # from net_multiStep_secondDerivative import MAML
 from config import args
 
