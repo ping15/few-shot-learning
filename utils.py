@@ -99,7 +99,7 @@ def residual_block(input_data, filters, stride=1):
     if stride > 1 or input_data.shape[-1] != filters:
         shortcut = layers.Conv2D(filters, 1, strides=stride, padding='same',
                                  kernel_regularizer=tf.keras.regularizers.l2(0.01))(shortcut)
-        shortcut = layers.BatchNormalization()(shortcut)
+        shortcut = layers.BaStchNormalization()(shortcut)
         shortcut = layers.ReLU()(shortcut)
 
     # 添加卷积和dropout
